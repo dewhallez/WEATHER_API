@@ -4,7 +4,8 @@ Basic Weather API with using Python, Flask, Html and CSS
 # Create account with OpenWeatherMap for weather access API key ---- https://openweathermap.org/
 
 
-# See requirements.txt 
+# Requirements
+pip3 install -r requirements.txt
 
 # Sample output images 
 
