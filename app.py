@@ -24,14 +24,14 @@ def render_results():
     api_key = get_api_key()
     data = get_weather_results(zip_code, api_key)
     temp = "{0:.2f}".format(data['main']["temp"])
-    feels_like = "{0:,2f}".format(data["main"]["feels_like"])
+    feels_like = "{0:.2f}".format(data["main"]["feels_like"])
     weather = data["weather"][0]["main"]
     location = data["name"]
 
     return render_template('results.html', location=location, temp=temp, feels_like=feels_like, weather=weather)
 
 
-# Get api key from "config.init" file
+# Get api key from "config.ini" file
 def get_api_key():
     config = configparser.ConfigParser()
     config.read('config.ini')
