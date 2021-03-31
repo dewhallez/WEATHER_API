@@ -5,5 +5,5 @@ Create account with OpenWeatherMap for weather access API key ---- https://openw
 See requirements.txt 
 
 
-![Screenshot](screenshot1)
-![Screenshot](screenshot2)
+![Screenshot](screenshot1.png)
+![Screenshot](screenshot2.png)
