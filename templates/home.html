@@ -7,7 +7,7 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
 </head>
 <body>
-    <h2>Weather Dashboard in Flask</h2>
+    <h2>Today's weather</h2>
     <form id="weatherForm" action="{{ url_for('render_results') }}" method="post">
         Location Zip Code: <input id="weatherInput" type="text" name="zipCode"><br>
         <input id="weatherSubmit" type="submit" value="Submit">
