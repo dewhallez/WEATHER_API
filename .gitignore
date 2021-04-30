@@ -3,3 +3,6 @@ config.ini
 .idea/
 .vscode/
 env/
+venv/
+
+

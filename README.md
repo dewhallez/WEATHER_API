@@ -1,4 +1,4 @@
-# Basic Weather API with using Python, Flask, Html and CSS
+# Flask weather app 
 
 
 # Create account with OpenWeatherMap for weather access API key ---- https://openweathermap.org/
@@ -6,6 +6,9 @@
 
 # Requirements
 pip3 install -r requirements.txt
+
+# create config.ini file in working directory and add your api key
+api = "api key"
 
 # Sample output images 
 
