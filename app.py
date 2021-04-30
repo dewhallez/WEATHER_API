@@ -23,8 +23,8 @@ def render_results():
 
     api_key = get_api_key()
     data = get_weather_results(zip_code, api_key)
-    temp = "{0:.2f}".format(data['main']["temp"])
-    feels_like = "{0:.2f}".format(data["main"]["feels_like"])
+    temp = "{0:.1f}".format(data['main']["temp"])
+    feels_like = "{0:.1f}".format(data["main"]["feels_like"])
     location = data["name"]
     description = data['weather'][0]['description']
     
