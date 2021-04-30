@@ -8,7 +8,9 @@
 pip3 install -r requirements.txt
 
 # create config.ini file in working directory and add your api key
+
 [openweathermap]
+
 api = "api key"
 
 # Sample output images 
