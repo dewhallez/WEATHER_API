@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="weatherResults">
-        <h3>{{ location }}</h3>
+        <h1>{{ location }}</h1>
         <h2>{{ temp }}° F</h2>
         <div class="media-left">
             <figure class="image is-100x100">
@@ -16,7 +16,9 @@
             </figure>
         </div>
         <h3>{{ description }}</h3>
-        <h5>Feels like: {{ feels_like }}° F</h5>
+        <h4>Feels like: {{ feels_like }}° F</h4>
+        <h6>Day Low {{ temp_min }}° F</h6>
+        <h6>Day High {{ temp_max }}° F</h6>
         </div>
 </body>
 </html>

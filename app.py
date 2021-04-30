@@ -28,9 +28,11 @@ def render_results():
     location = data["name"]
     description = data['weather'][0]['description']
     icon = data['weather'][0]['icon']
-    
+    temp_min = "{0:.1f}".format(data["main"]["temp_min"])
+    temp_max = "{0:.1f}".format(data["main"]["temp_max"])
+   
 
-    return render_template('results.html', location=location, temp=temp, feels_like=feels_like, description=description, icon=icon)
+    return render_template('results.html', location=location,temp=temp, feels_like=feels_like, description=description, icon=icon, temp_min=temp_min, temp_max=temp_max)
 
 
 # Get api key from "config.ini" file
