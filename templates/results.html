@@ -10,9 +10,14 @@
     <div id="weatherResults">
         <h3>{{ location }}</h3>
         <h2>{{ temp }}° F</h2>
+        <div class="media-left">
+            <figure class="image is-100x100">
+                <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
+            </figure>
+        </div>
         <h3>{{ description }}</h3>
         <h5>Feels like: {{ feels_like }}° F</h5>
-    </div>
+        </div>
 </body>
 </html>
 
