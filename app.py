@@ -44,7 +44,7 @@ def get_api_key():
 
 # Get weather for a specified zip code
 def get_weather_results(zip_code, api_key):
-    api_url = "https://api.openweathermap.org/data/2.5/weather?zip={}&units=imperial&appid={}".format(zip_code, api_key)
+    api_url = f"https://api.openweathermap.org/data/2.5/weather?zip={zip_code}&units=imperial&appid={api_key}"
     r = requests.get(api_url)
     return r.json()
 
