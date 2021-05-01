@@ -9,7 +9,7 @@
 <body>
     <h2>Check Weather</h2>
     <form id="weatherForm" action="{{ url_for('render_results') }}" method="post">
-        Location Zip Code: <input id="weatherInput" type="text" name="zipCode"><br>
+        Location Zip Code: <input id="weatherInput" type="text" placeholder="Enter a US city Zip code" name="zipCode"><br>
         <input id="weatherSubmit" type="submit" value="Submit">
     </form>
 </body>
