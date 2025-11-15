@@ -18,14 +18,19 @@ except Exception:
 
 # Configure app and logger
 app = Flask(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+log_format = (
+    '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+)
+logging.basicConfig(level=logging.INFO, format=log_format)
 app.logger = logging.getLogger('weather_api')
 app.logger.setLevel(logging.INFO)
 
 
 def _load_api_key_from_config():
     cfg = configparser.ConfigParser()
-    cfg_path = os.path.join(os.path.dirname(__file__), 'config.ini')
+    cfg_path = os.path.join(
+        os.path.dirname(__file__), 'config.ini'
+    )
     try:
         cfg.read(cfg_path)
         return cfg.get('openweathermap', 'api', fallback='').strip()
@@ -33,19 +38,29 @@ def _load_api_key_from_config():
         return ''
 
 
-# Prefer environment variable, fallback to config.ini for backward-compatibility
-_api_key = os.environ.get('OPENWEATHER_API_KEY') or _load_api_key_from_config()
+# Prefer environment variable, fallback to config.ini
+_api_key = (
+    os.environ.get('OPENWEATHER_API_KEY') or
+    _load_api_key_from_config()
+)
 app.config['OPENWEATHER_API_KEY'] = _api_key
 
 
 class WeatherClient:
-    """Small helper to call OpenWeather with a shared Session, retries, timeouts and a TTL cache.
+    """Call OpenWeather with Session, retries, timeouts and TTL cache.
 
-    - Uses requests.Session with HTTPAdapter Retry to reduce transient failures.
-    - Keeps a small in-memory TTL cache to reduce repeated identical requests.
+    - Uses requests.Session with HTTPAdapter Retry to reduce
+      transient failures.
+    - Keeps small in-memory TTL cache to reduce repeated identical
+      requests.
     """
 
-    def __init__(self, api_key: str, ttl: int = 600, max_cache_items: int = 500):
+    def __init__(
+        self,
+        api_key: str,
+        ttl: int = 600,
+        max_cache_items: int = 500
+    ):
         self.api_key = api_key
         self.ttl = int(ttl)
         self.session = requests.Session()
@@ -84,32 +99,54 @@ class WeatherClient:
                 self._cache.pop(key, None)
 
         # Build URL and call API with timeout
-        api_url = f"https://api.openweathermap.org/data/2.5/weather?zip={zip_code}&units=imperial&appid={self.api_key}"
+        base_url = (
+            'https://api.openweathermap.org/data/2.5/weather'
+        )
+        api_url = (
+            f"{base_url}?zip={zip_code}&units=imperial&"
+            f"appid={self.api_key}"
+        )
         try:
             resp = self.session.get(api_url, timeout=(3, 7))
             resp.raise_for_status()
             data = resp.json()
             # basic validity checks
-            if not isinstance(data, dict) or 'main' not in data or 'weather' not in data:
-                app.logger.error('OpenWeather returned unexpected payload for %s: %s', zip_code, data)
+            if (not isinstance(data, dict) or
+                    'main' not in data or
+                    'weather' not in data):
+                app.logger.error(
+                    'OpenWeather returned unexpected payload '
+                    'for %s: %s', zip_code, data
+                )
                 return None
 
             # Maintain simple cache size bound
             if len(self._cache) >= self._max_cache_items:
-                # drop oldest entry (not strictly LRU, but simple)
-                oldest = min(self._cache.items(), key=lambda it: it[1][0])
+                # drop oldest entry (not strictly LRU)
+                oldest = min(
+                    self._cache.items(),
+                    key=lambda it: it[1][0]
+                )
                 self._cache.pop(oldest[0], None)
 
             self._cache[key] = (now + self.ttl, data)
-            app.logger.info('Fetched weather for %s (cached for %s secs)', zip_code, self.ttl)
+            app.logger.info(
+                'Fetched weather for %s (cached for %s secs)',
+                zip_code, self.ttl
+            )
             return data
         except requests.RequestException as exc:
-            app.logger.error('Weather API request failed for %s: %s', zip_code, exc)
+            app.logger.error(
+                'Weather API request failed for %s: %s',
+                zip_code, exc
+            )
             return None
 
 
 # Instantiate the client (safe to do at import time)
-weather_client = WeatherClient(app.config.get('OPENWEATHER_API_KEY') or '')
+weather_client = WeatherClient(
+    app.config.get('OPENWEATHER_API_KEY') or ''
+)
 
 
 @app.route('/')
@@ -121,16 +158,27 @@ def weather_dashboard():
 def render_results():
     zip_code = request.form.get('zipCode', '').strip()
     if not zip_code:
-        return render_template('home.html', error='Please enter a zip code')
+        return render_template(
+            'home.html', error='Please enter a zip code'
+        )
 
     api_key = app.config.get('OPENWEATHER_API_KEY')
     if not api_key:
         app.logger.error('OpenWeather API key missing')
-        return render_template('home.html', error='Server configuration error: API key missing')
+        return render_template(
+            'home.html',
+            error='Server configuration error: API key missing'
+        )
 
     data = weather_client.get_weather(zip_code)
     if not data:
-        return render_template('home.html', error='Could not retrieve weather for that zip code. Please check the zip code and try again.')
+        return render_template(
+            'home.html',
+            error=(
+                'Could not retrieve weather for that zip code. '
+                'Please check the zip code and try again.'
+            )
+        )
 
     try:
         temp = "{0:.1f}".format(data['main']["temp"])
@@ -146,9 +194,22 @@ def render_results():
             humidity = f"{humidity}%"
     except (KeyError, IndexError, TypeError) as e:
         app.logger.error('Unexpected API response structure: %s', e)
-        return render_template('home.html', error='Unexpected response from weather service.')
+        return render_template(
+            'home.html',
+            error='Unexpected response from weather service.'
+        )
 
-    return render_template('results.html', location=location, temp=temp, feels_like=feels_like, description=description, icon=icon, temp_min=temp_min, temp_max=temp_max, humidity=humidity)
+    return render_template(
+        'results.html',
+        location=location,
+        temp=temp,
+        feels_like=feels_like,
+        description=description,
+        icon=icon,
+        temp_min=temp_min,
+        temp_max=temp_max,
+        humidity=humidity
+    )
 
 
 if __name__ == '__main__':

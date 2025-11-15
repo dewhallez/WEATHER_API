@@ -1,8 +1,6 @@
 import time
 from unittest.mock import Mock
 
-import pytest
-
 from app import WeatherClient
 
 
@@ -21,7 +19,12 @@ class DummyResponse:
 
 def test_get_weather_success_and_cache(monkeypatch):
     sample = {
-        "main": {"temp": 70.0, "feels_like": 69.5, "temp_min": 65.0, "temp_max": 75.0},
+        "main": {
+            "temp": 70.0,
+            "feels_like": 69.5,
+            "temp_min": 65.0,
+            "temp_max": 75.0
+        },
         "weather": [{"description": "clear sky", "icon": "01d"}],
         "name": "Testville"
     }
@@ -40,7 +43,7 @@ def test_get_weather_success_and_cache(monkeypatch):
     assert data1["name"] == "Testville"
     assert mock_get.call_count == 1
 
-    # Second call within TTL should return cached result and not call session.get again
+    # Second call within TTL should return cached result
     data2 = client.get_weather("12345")
     assert data2 is data1
     assert mock_get.call_count == 1
