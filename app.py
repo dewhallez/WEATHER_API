@@ -141,11 +141,14 @@ def render_results():
         icon = weather.get('icon', '')
         temp_min = "{0:.1f}".format(data["main"]["temp_min"])
         temp_max = "{0:.1f}".format(data["main"]["temp_max"])
+        humidity = data['main'].get('humidity', None)
+        if humidity is not None:
+            humidity = f"{humidity}%"
     except (KeyError, IndexError, TypeError) as e:
         app.logger.error('Unexpected API response structure: %s', e)
         return render_template('home.html', error='Unexpected response from weather service.')
 
-    return render_template('results.html', location=location, temp=temp, feels_like=feels_like, description=description, icon=icon, temp_min=temp_min, temp_max=temp_max)
+    return render_template('results.html', location=location, temp=temp, feels_like=feels_like, description=description, icon=icon, temp_min=temp_min, temp_max=temp_max, humidity=humidity)
 
 
 if __name__ == '__main__':

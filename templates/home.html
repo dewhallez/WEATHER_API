@@ -2,21 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check current weather conditions by US ZIP code">
     <title>Weather Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/home.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/home.css') }}">
 </head>
 <body>
-    {% if error %}
-    <div class="error" style="color:crimson; font-weight:700; margin-bottom:1rem;">
-        {{ error }}
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+        <p class="subtitle">Get current weather for any US location</p>
+
+        {% if error %}
+        <div class="error" role="alert">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+        <form id="weatherForm" action="{{ url_for('render_results') }}" method="post" novalidate>
+            <div class="form-group">
+                <label for="weatherInput">Enter US ZIP Code</label>
+                <input
+                    id="weatherInput"
+                    type="text"
+                    name="zipCode"
+                    placeholder="e.g., 10001"
+                    pattern="[0-9]{5}"
+                    maxlength="5"
+                    required
+                    aria-label="US ZIP code"
+                    aria-describedby="zipHint">
+                <p class="hint" id="zipHint">5-digit ZIP code (e.g., New York: 10001)</p>
+            </div>
+            <input id="weatherSubmit" type="submit" value="Check Weather">
+        </form>
     </div>
-    {% endif %}
-    <h2>Check Weather</h2>
-    <form id="weatherForm" action="{{ url_for('render_results') }}" method="post">
-        Location Zip Code: <input id="weatherInput" type="text" placeholder="Enter a US city Zip code" name="zipCode"><br>
-        <input id="weatherSubmit" type="submit" value="Submit">
-    </form>
 </body>
 </html>
 

@@ -2,24 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Results Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Current weather results">
+    <title>Weather Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/results.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="weatherResults">
+    <div class="container">
+        <div class="weather-icon">
+            <img src="https://openweathermap.org/img/wn/{{ icon }}@2x.png" alt="Weather icon for {{ description }}">
+        </div>
+
         <h1>{{ location }}</h1>
-        <h2>{{ temp }}° F</h2>
-        <div class="media-left">
-            <figure class="image is-100x100">
-                <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
-            </figure>
+        <p class="location-tag">Current Weather</p>
+
+        <div class="temp-main">{{ temp }}°</div>
+        <p class="description">{{ description }}</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Feels Like</div>
+                <div class="stat-value">{{ feels_like }}°</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Humidity</div>
+                <div class="stat-value">{{ humidity | default('—') }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Low</div>
+                <div class="stat-value">{{ temp_min }}°</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">High</div>
+                <div class="stat-value">{{ temp_max }}°</div>
+            </div>
         </div>
-        <h3>{{ description }}</h3>
-        <h4>Feels like: {{ feels_like }}° F</h4>
-        <h6>Day Low {{ temp_min }}° F</h6>
-        <h6>Day High {{ temp_max }}° F</h6>
-        </div>
+
+        <a href="{{ url_for('weather_dashboard') }}" class="back-link">← Check Another Location</a>
+    </div>
 </body>
 </html>
 
